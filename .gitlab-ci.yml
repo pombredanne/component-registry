@@ -1,7 +1,9 @@
 stages:
   - lint
   - test
+  - build
   - deploy-stage
+  - deploy-prod
 
 include:
   - project: 'product-security/dev/component-registry-ops'
@@ -34,10 +36,20 @@ before_script:
     - export PIP_INDEX_URL
     - export ROOT_CA_URL
 
+build-image:
+  stage: build
+  extends:
+    - .ansible-build
+
 deploy-stage:
   stage: deploy-stage
   extends:
-    - .ansible-run
+    - .ansible-deploy-stage
+
+deploy-prod:
+  stage: deploy-prod
+  extends:
+    - .ansible-deploy-prod
 
 test:
   stage: test
